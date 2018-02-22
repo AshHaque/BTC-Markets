@@ -3,8 +3,10 @@ import time
 import hashlib
 import hmac
 import base64
+import urllib.parse
 import json
 import urllib.request
+
 
 from collections import OrderedDict
 from config import apikey_secret
@@ -32,7 +34,7 @@ def build_headers(URL, PUBKEY, PRIVKEY):
                                 ("Accept-Charset", "UTF-8"),
                                 ("Content-Type", "application/json"),
                                 ("apikey", pkey),
-                                ("timestamp", "1519275095335"),
+                                ("timestamp", sctstamp),
                                 ("signature", bsig)])
     # Load list into dictionary
     headers = dict(headers_list)
@@ -46,13 +48,10 @@ pkey = apikey_public.encode("utf-8")
 skey = base64.standard_b64decode(askey)
 
 header = build_headers(url, pkey, skey)
-reqbody = OrderedDict([])
+header = urllib.parse.urlencode(header)
+url = url + '?' + header
 
-reqbodydic = json.dumps(dict(reqbody))
-data = reqbodydic.encode("utf-8")
-print("Header:",header)
-print("Payload:",data)
-
-req = urllib.request.Request(url, data, header)
+print(url)
+req = urllib.request.Request(url)
 response = urllib.request.urlopen(req)
 print("\nResponse:",response.read())
