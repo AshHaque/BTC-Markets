@@ -24,8 +24,8 @@ def build_headers(uri, rbody=None):
     if rbody is None:
         sbody = uri + "\n" + sctstamp + "\n"
     else:
-        sbody = uri + "\n" + rbody + "\n" + sctstamp + "\n"
-    # print(sbody)
+        sbody = uri + "\n" + sctstamp + "\n" + rbody + "\n"
+    print(sbody)
     rbody = sbody.encode("utf-8")
     rsig = hmac.new(skey, rbody, hashlib.sha512)
     bsig = base64.standard_b64encode(rsig.digest()).decode("utf-8")
@@ -39,6 +39,6 @@ def build_headers(uri, rbody=None):
     headers['timestamp'] = sctstamp
     headers['signature'] = bsig
     headers = dict(headers)
-    # print(headers)
+    print(headers)
 
     return headers
